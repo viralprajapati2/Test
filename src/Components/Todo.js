@@ -18,7 +18,6 @@ const Todo = () => {
 
         // setCount("") store update 
         console.log(store);
-
     }
 
     function deleteTodo(id) {
