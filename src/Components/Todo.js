@@ -3,69 +3,81 @@ import { useState } from 'react';
 
 const Todo = () => {
 
-    const [todo, setTodo] = useState("");
-    // const [count, setCount] = useState([]);
-    const [EditTodo, setEditTodo] = useState('');
+    const [todo, setTodo] = useState([]);
+    const [count, setCount] = useState("");
+    const [EditTodo, setEditTodo] = useState(false);
     const [editing, setEditing] = useState("");
 
     function SubmitHandle(e) {
         e.preventDefault();
 
         const store = {
-            id: new Date().getTime,
-            text: todo,
+            id: new Date().getTime(),
+            text: count,
         }
+        console.log(store,18);
 
-        // setCount("") store update 
-        console.log(store);
+        setTodo([...todo].concat(store))
+        setCount("")
     }
 
     function deleteTodo(id) {
         const updatedTodos = [...todo].filter((todo) => todo.id !== id)
-        // setCount(updatedTodos)
+        setTodo(updatedTodos)
+        return todo
     }
 
-    function editTodo(id) {
-
-        const Newtodo = "Value";
-
+    function Toggle(id) {
         const updatedTodos = [...todo].map((todo) => {
             if (todo.id === id) {
-                todo.text = Newtodo;
+                todo.completed = !todo.completed
             }
             return todo
         })
 
         setTodo(updatedTodos);
+    }
+
+
+    function editTodo(todo) {
+
+        setCount(todo.text);
+        // setTodo(updatedTodos);
+        setEditTodo(true);
         setEditing("");
     }
-    console.log(todo);
+
+    function update(todo){
+        todo.text = count; 
+        console.log(count,51);
+        console.log(todo,52);
+        setEditTodo(false);
+        setCount("");
+        return todo
+    }
 
     return (
-        <div>
-            <div className='Todo'>
-
+        <>
+            <div>
                 <form onSubmit={SubmitHandle}>
-                    <input type="text" onChange={(e) => setTodo(e.target.value)} value={todo} />
+                    <input type="text" onChange={(e) => setCount(e.target.value)} value={count} />
                     <button type='submit'>Add Task</button>
                 </form>
-
+                
                 {todo.map((todo) =>
                     <div key={todo.id}>
                         {EditTodo == todo.id ?
                             (<input type="text" Value={todo.text} onChange={(e) => setEditing(e.target.value)} />) :
                             (<div>{todo.text}</div>)
+                        }
                         <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-                            }
-                        {EditTodo == todo.id 
-                        ?
-                            <button onClick={() => editTodo(todo.id)}>Update</button> :
-                            <button onClick={() => editTodo(todo.id)}> Edit</button>}
+                        {EditTodo
+                            ?
+                            <button onClick={() => update(todo)}>Update</button> :
+                            <button onClick={() => editTodo(todo)}> Edit</button>}
                     </div>)}
             </div>
-        </div>
+        </>
     )
 }
-
 export default Todo;
-
